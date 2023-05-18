@@ -20,6 +20,7 @@ const mdbClient = new MongoClient(process.env.MONGODB_URI, {
 (async (_) => {
   try {
     const categories = mdbClient.db("toystate").collection("categories");
+    const toys = mdbClient.db("toystate").collection("toys");
 
     app.get("/categories", async (req, res) => {
       let result;
@@ -29,6 +30,20 @@ const mdbClient = new MongoClient(process.env.MONGODB_URI, {
         result = await categories.findOne(query);
       } else {
         const cursor = categories.find();
+        result = await cursor.toArray();
+      }
+
+      res.send(result);
+    });
+
+    app.get("/toys", async (req, res) => {
+      let result;
+
+      if (req.query.id) {
+        const query = { _id: new ObjectId(req.query.id) };
+        result = await toys.findOne(query);
+      } else {
+        const cursor = toys.find();
         result = await cursor.toArray();
       }
 
