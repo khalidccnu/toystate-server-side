@@ -42,6 +42,10 @@ const mdbClient = new MongoClient(process.env.MONGODB_URI, {
       if (req.query.id) {
         const query = { _id: new ObjectId(req.query.id) };
         result = await toys.findOne(query);
+      } else if (req.query.cid) {
+        const query = { category_id: req.query.cid };
+        const cursor = toys.find(query);
+        result = await cursor.toArray();
       } else {
         const cursor = toys.find();
         result = await cursor.toArray();
