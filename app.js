@@ -100,6 +100,13 @@ const mdbClient = new MongoClient(process.env.MONGODB_URI, {
       res.send(result);
     });
 
+    app.delete("/toys", async (req, res) => {
+      const query = { _id: new ObjectId(req.query.id) };
+      const result = await toys.deleteOne(query);
+
+      res.send(result);
+    });
+
     mdbClient
       .db("admin")
       .command({ ping: 1 })
