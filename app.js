@@ -9,6 +9,7 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 app.use(cors());
+app.use(express.json());
 
 const mdbClient = new MongoClient(process.env.MONGODB_URI, {
   serverApi: {
@@ -82,6 +83,19 @@ const mdbClient = new MongoClient(process.env.MONGODB_URI, {
       const query = { discount: true };
       const cursor = toys.find(query);
       const result = await cursor.toArray();
+
+      res.send(result);
+    });
+
+    app.post("/toys", async (req, res) => {
+      const toy = {
+        ...req.body,
+        price: +req.body.price,
+        shipping: +req.body.shipping,
+        quantity: +req.body.quantity,
+        discount: JSON.parse(req.body.discount),
+      };
+      const result = await toys.insertOne(toy);
 
       res.send(result);
     });
