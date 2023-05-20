@@ -48,7 +48,7 @@ const mdbClient = new MongoClient(process.env.MONGODB_URI, {
         const cursor = toys.find(query);
         result = await cursor.toArray();
       } else {
-        const cursor = toys.find();
+        const cursor = toys.find().limit(+req.query.limit || 0);
         result = await cursor.toArray();
       }
 
