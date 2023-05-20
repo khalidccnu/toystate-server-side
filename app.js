@@ -51,8 +51,13 @@ const mdbClient = new MongoClient(process.env.MONGODB_URI, {
         let query = {},
           cursor;
 
+        if (req.query.uid) query = { seller_id: req.query.uid };
+
         if (req.query.search)
-          query = { name: { $regex: req.query.search, $options: "i" } };
+          query = {
+            ...query,
+            name: { $regex: req.query.search, $options: "i" },
+          };
 
         if (req.query.sort) {
           let sort = 1;
