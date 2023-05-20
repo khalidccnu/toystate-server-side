@@ -100,6 +100,20 @@ const mdbClient = new MongoClient(process.env.MONGODB_URI, {
       res.send(result);
     });
 
+    app.put("/toys", async (req, res) => {
+      const query = { _id: new ObjectId(req.query.id) };
+      const toy = {
+        ...req.body,
+        price: +req.body.price,
+        shipping: +req.body.shipping,
+        quantity: +req.body.quantity,
+        discount: JSON.parse(req.body.discount),
+      };
+      const result = await toys.updateOne(query, { $set: toy });
+
+      res.send(result);
+    });
+
     app.delete("/toys", async (req, res) => {
       const query = { _id: new ObjectId(req.query.id) };
       const result = await toys.deleteOne(query);
