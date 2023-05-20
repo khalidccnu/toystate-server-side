@@ -48,12 +48,25 @@ const mdbClient = new MongoClient(process.env.MONGODB_URI, {
         const cursor = toys.find(query);
         result = await cursor.toArray();
       } else {
-        let query = {};
+        let query = {},
+          cursor;
 
         if (req.query.search)
           query = { name: { $regex: req.query.search, $options: "i" } };
 
-        const cursor = toys.find(query).limit(+req.query.limit || 0);
+        if (req.query.sort) {
+          let sort = 1;
+
+          req.query.sort !== "asc" ? (sort = -1) : null;
+
+          cursor = toys
+            .find(query)
+            .limit(+req.query.limit || 0)
+            .sort({ price: sort });
+        } else {
+          cursor = toys.find(query).limit(+req.query.limit || 0);
+        }
+
         result = await cursor.toArray();
       }
 
