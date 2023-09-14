@@ -8,7 +8,14 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 5000;
 
-app.use(cors());
+const corsOptions = {
+  origin: "*",
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  credentials: true,
+  optionSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 const mdbClient = new MongoClient(process.env.MONGODB_URI, {
@@ -128,7 +135,7 @@ const mdbClient = new MongoClient(process.env.MONGODB_URI, {
   } catch (err) {
     console.log("Did not connect to MongoDB! " + err.message);
   } finally {
-    await mdbClient.close();
+    // await mdbClient.close();
   }
 })();
 
